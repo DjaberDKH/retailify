@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Retailify - Digitalisez votre distribution et développez votre réseau</title>
+  <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/Logo.png">
+  <meta name="description" content="Retailify connecte producteurs et distributeurs aux détaillants. Réduisez les coûts, fluidifiez les ventes et boostez votre croissance.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2e3244',
+            secondary: '#c5c6c6',
+            accent: '#f1895c',
+            white: '#ffffff',
+            iconBg: '#516079'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { box-sizing: border-box; transition: opacity 260ms ease; }
+    .gradient-bg { background: linear-gradient(135deg, #2e3244 0%, #3a3f56 100%); }
+    .fade-in { animation: fadeIn 0.8s ease-in; }
+    .slide-in-left { animation: slideInLeft 0.8s ease-out; }
+    .slide-in-right { animation: slideInRight 0.8s ease-out; }
+    .bounce-in { animation: bounceIn 1s ease-out; }
+    .pulse-gentle { animation: pulseGentle 2s infinite; }
+    
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(30px);} 
+      to { opacity: 1; transform: translateY(0);} 
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.3); }
+      50% { opacity: 1; transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulseGentle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .hover-lift { transition: all 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    .icon-bg { background-color: #516079; }
+    .flag { 
+      cursor: pointer; 
+      width: 28px; 
+      height: 20px; 
+      border-radius: 4px; 
+      margin-left: 8px; 
+      opacity: 0.8; 
+      transition: all 0.2s ease; 
+    }
+    .flag:hover { transform: translateY(-2px); opacity: 1; }
+    .flag.active { box-shadow: 0 0 0 2px rgba(241,137,92,0.3); opacity: 1; }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .mobile-stack { flex-direction: column; }
+      .mobile-center { text-align: center; }
+      .mobile-padding { padding: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body class="bg-white">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/App%20logo.png"
+             alt="Logo Retailify" class="h-10 w-auto mr-3 bounce-in">
+        <span class="text-2xl font-bold text-primary">Retailify</span>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <!-- Navigation Links - SEULEMENT "Pour les Commerçants" sur la page Producteurs -->
+        <div class="hidden md:flex space-x-6">
+          <a href="index.html" class="text-primary hover:text-accent font-semibold text-sm transition-all hover:scale-105" data-translate="navMerchants">Pour les Commerçants</a>
+        </div>
+        
+        <!-- Language Selector -->
+        <div class="flex items-center ml-4" id="langSelector">
+          <img src="https://flagcdn.com/w20/fr.png" class="flag" data-lang="fr" alt="FR" title="Français" />
+          <img src="https://flagcdn.com/w20/gb.png" class="flag" data-lang="en" alt="EN" title="English" />
+          <img src="https://flagcdn.com/w20/dz.png" class="flag" data-lang="ar" alt="AR" title="العربية" />
+        </div>
+        
+        <!-- Mobile menu button -->
+        <button class="md:hidden text-primary" id="mobileMenuButton">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="md:hidden hidden bg-white border-t" id="mobileMenu">
+      <div class="px-4 py-2 space-y-2">
+        <a href="index.html" class="block text-primary hover:text-accent font-semibold text-sm" data-translate="navMerchants">Pour les Commerçants</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section Héros -->
+  <section class="gradient-bg text-white py-16 md:py-20 mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div class="fade-in">
+          <h1 class="text-3xl md:text-5xl font-bold mb-6 leading-tight" data-translate="heroTitle">
+            Digitalisez votre distribution, développez votre réseau et augmentez vos ventes avec Retailify.
+          </h1>
+          <p class="text-lg md:text-xl mb-8 text-gray-200" data-translate="heroDesc">
+            Connectez vos distributeurs aux détaillants pour réduire les coûts, fluidifier et augmenter vos ventes et booster votre croissance.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeAzq8muBOfOjDEjLUbuqsSxfkzfdWnCy4JuUBCzCxV8EZZWw/viewform?usp=dialog" 
+               target="_blank" 
+               class="bg-accent hover:bg-orange-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold text-base md:text-lg transition-all text-center pulse-gentle">
+              <span data-translate="heroBtn">Demander une démo</span>
+            </a>
+          </div>
+        </div>
+        <div class="fade-in mt-8 md:mt-0">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/suppliers_home.png"
+               alt="Interface Retailify Producteurs" class="w-full max-w-md mx-auto rounded-2xl shadow-2xl"/>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Problème -->
+  <section class="py-16 md:py-20 bg-gray-50 mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center fade-in">
+        <h2 class="text-2xl md:text-4xl font-bold text-primary mb-6" data-translate="problemTitle">Problèmes actuels de la distribution</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8 mt-8 md:mt-12">
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">👁️</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="p1Title">Manque de visibilité</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="p1Desc">Difficulté à anticiper la demande réelle des marchés</p>
+        </div>
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">🤝</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="p2Title">Fidélisation difficile</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="p2Desc">Complexité à fidéliser les points de vente</p>
+        </div>
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">💰</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="p3Title">Prix non contrôlés</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="p3Desc">Manque de contrôle sur les prix de vente finaux</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Solution -->
+  <section class="py-16 md:py-20 bg-white mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center fade-in">
+        <h2 class="text-2xl md:text-4xl font-bold text-primary mb-6" data-translate="solutionTitle">Comment Retailify vous aide</h2>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8 mt-8 md:mt-12">
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">📊</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="s1Title">Centralisation des commandes</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="s1Desc">Recevez et gérez toutes les commandes des POS sur une seule plateforme</p>
+        </div>
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">🎯</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="s2Title">Gestion des promotions</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="s2Desc">Créez et diffusez facilement vos promotions et offres spéciales</p>
+        </div>
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">📈</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="s3Title">Statistiques avancées</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="s3Desc">Accédez à des données précises pour anticiper la demande</p>
+        </div>
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">💬</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="s4Title">Communication directe</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="s4Desc">Échangez directement avec vos clients points de vente</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Fonctionnalités -->
+  <section class="py-16 md:py-20 bg-gray-50 mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 md:mb-16">
+        <h2 class="text-2xl md:text-4xl font-bold text-primary mb-6" data-translate="featuresTitle">Fonctionnalités clés</h2>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg hover-lift">
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-4" data-translate="f1Title">📊 Tableau de bord complet</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="f1Desc">Visualisez vos performances et KPI en temps réel</p>
+        </div>
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg hover-lift">
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-4" data-translate="f2Title">🚚 Gestion des livraisons</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="f2Desc">Optimisez la planification et le suivi des livraisons</p>
+        </div>
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg hover-lift">
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-4" data-translate="f3Title">🎯 Promotions ciblées</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="f3Desc">Diffusez des offres personnalisées par zone ou client</p>
+        </div>
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg hover-lift">
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-4" data-translate="f4Title">📈 Rapports détaillés</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="f4Desc">Exportez vos données de vente pour analyse approfondie</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Screenshots -->
+  <section class="py-16 md:py-20 bg-white mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 md:mb-16">
+        <h2 class="text-2xl md:text-4xl font-bold text-primary mb-6" data-translate="screenshotsTitle">Aperçu de l'app Retailify</h2>
+      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div class="text-center fade-in">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/home.png" 
+               alt="Tableau de bord" class="w-full rounded-xl shadow-lg mb-3 md:mb-4 hover-lift">
+          <p class="text-gray-600 font-semibold text-sm md:text-base" data-translate="screen1">Tableau de bord</p>
+        </div>
+        <div class="text-center fade-in">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/listing.png" 
+               alt="Gestion catalogue" class="w-full rounded-xl shadow-lg mb-3 md:mb-4 hover-lift">
+          <p class="text-gray-600 font-semibold text-sm md:text-base" data-translate="screen2">Gestion catalogue</p>
+        </div>
+        <div class="text-center fade-in">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/offers.png" 
+               alt="Promotions" class="w-full rounded-xl shadow-lg mb-3 md:mb-4 hover-lift">
+          <p class="text-gray-600 font-semibold text-sm md:text-base" data-translate="screen3">Gestion promotions</p>
+        </div>
+        <div class="text-center fade-in">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/orders.png" 
+               alt="Commandes" class="w-full rounded-xl shadow-lg mb-3 md:mb-4 hover-lift">
+          <p class="text-gray-600 font-semibold text-sm md:text-base" data-translate="screen4">Suivi commandes</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section CTA Final -->
+  <section class="bg-primary py-16 md:py-20 mobile-padding">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-4xl font-bold text-white mb-6" data-translate="ctaTitle">Inscrivez-vous pour demander une démo de Retailify</h2>
+      <p class="text-lg md:text-xl text-gray-200 mb-8" data-translate="ctaDesc">
+        Découvrez comment Retailify peut transformer votre chaîne de distribution et booster vos ventes.
+      </p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeAzq8muBOfOjDEjLUbuqsSxfkzfdWnCy4JuUBCzCxV8EZZWw/viewform?usp=dialog" 
+         target="_blank" 
+         class="bg-accent hover:bg-orange-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-lg font-semibold text-lg md:text-xl transition-all inline-block pulse-gentle">
+        <span data-translate="ctaBtn">Demander une démo</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white py-12 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="flex items-center justify-center mb-4">
+        <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/App%20logo.png" 
+             alt="Logo Retailify" class="h-8 w-auto mr-3">
+        <span class="text-xl font-bold text-primary">Retailify</span>
+      </div>
+      <div class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-6 mb-4">
+        <a href="index.html" class="text-primary hover:text-accent font-semibold" data-translate="navMerchants">Pour les Commerçants</a>
+      </div>
+      <p class="text-gray-600" data-translate="footerText">© 2024 Retailify. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      fr: {
+        navMerchants: "Pour les Commerçants",
+        heroTitle: "Digitalisez votre distribution, développez votre réseau et augmentez vos ventes avec Retailify.",
+        heroDesc: "Connectez vos distributeurs aux détaillants pour réduire les coûts, fluidifier et augmenter vos ventes et booster votre croissance.",
+        heroBtn: "Demander une démo",
+        problemTitle: "Problèmes actuels de la distribution",
+        p1Title: "Manque de visibilité",
+        p1Desc: "Difficulté à anticiper la demande réelle des marchés",
+        p2Title: "Fidélisation difficile",
+        p2Desc: "Complexité à fidéliser les points de vente",
+        p3Title: "Prix non contrôlés",
+        p3Desc: "Manque de contrôle sur les prix de vente finaux",
+        solutionTitle: "Comment Retailify vous aide",
+        s1Title: "Centralisation des commandes",
+        s1Desc: "Recevez et gérez toutes les commandes des POS sur une seule plateforme",
+        s2Title: "Gestion des promotions",
+        s2Desc: "Créez et diffusez facilement vos promotions et offres spéciales",
+        s3Title: "Statistiques avancées",
+        s3Desc: "Accédez à des données précises pour anticiper la demande",
+        s4Title: "Communication directe",
+        s4Desc: "Échangez directement avec vos clients points de vente",
+        featuresTitle: "Fonctionnalités clés",
+        f1Title: "📊 Tableau de bord complet",
+        f1Desc: "Visualisez vos performances et KPI en temps réel",
+        f2Title: "🚚 Gestion des livraisons",
+        f2Desc: "Optimisez la planification et le suivi des livraisons",
+        f3Title: "🎯 Promotions ciblées",
+        f3Desc: "Diffusez des offres personnalisées par zone ou client",
+        f4Title: "📈 Rapports détaillés",
+        f4Desc: "Exportez vos données de vente pour analyse approfondie",
+        screenshotsTitle: "Aperçu de l'app Retailify",
+        screen1: "Tableau de bord",
+        screen2: "Gestion catalogue",
+        screen3: "Gestion promotions",
+        screen4: "Suivi commandes",
+        ctaTitle: "Inscrivez-vous pour demander une démo de Retailify",
+        ctaDesc: "Découvrez comment Retailify peut transformer votre chaîne de distribution et booster vos ventes.",
+        ctaBtn: "Demander une démo",
+        footerText: "© 2024 Retailify. Tous droits réservés."
+      },
+      en: {
+        navMerchants: "For Merchants",
+        heroTitle: "Digitize your distribution, grow your network and increase your sales with Retailify.",
+        heroDesc: "Connect your distributors to retailers to reduce costs, streamline and increase sales, and boost your growth.",
+        heroBtn: "Request a Demo",
+        problemTitle: "Current Distribution Problems",
+        p1Title: "Lack of Visibility",
+        p1Desc: "Difficulty anticipating real market demand",
+        p2Title: "Difficult Loyalty",
+        p2Desc: "Complexity in retaining points of sale",
+        p3Title: "Uncontrolled Prices",
+        p3Desc: "Lack of control over final selling prices",
+        solutionTitle: "How Retailify Helps You",
+        s1Title: "Order Centralization",
+        s1Desc: "Receive and manage all POS orders on a single platform",
+        s2Title: "Promotion Management",
+        s2Desc: "Easily create and distribute promotions and special offers",
+        s3Title: "Advanced Statistics",
+        s3Desc: "Access precise data to anticipate demand",
+        s4Title: "Direct Communication",
+        s4Desc: "Communicate directly with your point of sale clients",
+        featuresTitle: "Key Features",
+        f1Title: "📊 Complete Dashboard",
+        f1Desc: "Visualize your performance and KPIs in real time",
+        f2Title: "🚚 Delivery Management",
+        f2Desc: "Optimize delivery planning and tracking",
+        f3Title: "🎯 Targeted Promotions",
+        f3Desc: "Distribute personalized offers by zone or customer",
+        f4Title: "📈 Detailed Reports",
+        f4Desc: "Export your sales data for in-depth analysis",
+        screenshotsTitle: "Retailify App Preview",
+        screen1: "Dashboard",
+        screen2: "Catalog Management",
+        screen3: "Promotion Management",
+        screen4: "Order Tracking",
+        ctaTitle: "Sign up to request a Retailify demo",
+        ctaDesc: "Discover how Retailify can transform your distribution chain and boost your sales.",
+        ctaBtn: "Request a Demo",
+        footerText: "© 2024 Retailify. All rights reserved."
+      },
+      ar: {
+        navMerchants: "للتجار",
+        heroTitle: "رقمن توزيعك، طور شبكتك وزد مبيعاتك مع Retailify.",
+        heroDesc: "اربط موزعيك بالباعة بالتجزئة لتقليل التكاليف، وتبسيط وزيادة المبيعات، وتعزيز نموك.",
+        heroBtn: "طلب عرض تجريبي",
+        problemTitle: "مشاكل التوزيع الحالية",
+        p1Title: "نقص الرؤية",
+        p1Desc: "صعوبة في توقع الطلب الحقيقي في السوق",
+        p2Title: "ولاء صعب",
+        p2Desc: "تعقيد في الاحتفاظ بنقاط البيع",
+        p3Title: "أسعار غير مسيطر عليها",
+        p3Desc: "نقص السيطرة على أسعار البيع النهائية",
+        solutionTitle: "كيف تساعدك Retailify",
+        s1Title: "مركزية الطلبات",
+        s1Desc: "استلم وادير جميع طلبات نقاط البيع على منصة واحدة",
+        s2Title: "إدارة العروض الترويجية",
+        s2Desc: "أنشئ ووزع العروض الترويجية والعروض الخاصة بسهولة",
+        s3Title: "إحصائيات متقدمة",
+        s3Desc: "الوصول إلى بيانات دقيقة لتوقع الطلب",
+        s4Title: "اتصال مباشر",
+        s4Desc: "تواصل مباشرة مع عملاء نقاط البيع الخاصة بك",
+        featuresTitle: "الميزات الرئيسية",
+        f1Title: "📊 لوحة تحكم كاملة",
+        f1Desc: "تصور أدائك ومؤشرات الأداء الرئيسية في الوقت الحقيقي",
+        f2Title: "🚚 إدارة التوصيل",
+        f2Desc: "حسن تخطيط وتتبع التوصيل",
+        f3Title: "🎯 عروض ترويجية مستهدفة",
+        f3Desc: "وزع عروض مخصصة حسب المنطقة أو العميل",
+        f4Title: "📈 تقارير مفصلة",
+        f4Desc: "صدر بيانات مبيعاتك لتحليل متعمق",
+        screenshotsTitle: "معاينة تطبيق Retailify",
+        screen1: "لوحة التحكم",
+        screen2: "إدارة الكتالوج",
+        screen3: "إدارة العروض",
+        screen4: "تتبع الطلبات",
+        ctaTitle: "سجل لطلب عرض تجريبي من Retailify",
+        ctaDesc: "اكتشف كيف يمكن لـ Retailify تحويل سلسلة التوزيع الخاصة بك وتعزيز مبيعاتك.",
+        ctaBtn: "طلب عرض تجريبي",
+        footerText: "© 2024 Retailify. جميع الحقوق محفوظة."
+      }
+    };
+
+    // Mobile menu functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+
+      // Language detection and initialization
+      function getBrowserLanguage() {
+        const browserLang = navigator.language || navigator.userLanguage;
+        const langCode = browserLang.split('-')[0];
+        if (translations[langCode]) {
+          return langCode;
+        }
+        return 'fr';
+      }
+
+      function changeLanguage(lang) {
+        document.documentElement.lang = lang;
+        document.title = lang === 'fr' 
+          ? 'Retailify - Digitalisez votre distribution et développez votre réseau'
+          : lang === 'en'
+          ? 'Retailify - Digitize your distribution and grow your network'
+          : 'Retailify - رقمّن توزيعك وطور شبكتك';
+
+        // Update all translatable elements
+        document.querySelectorAll('[data-translate]').forEach(element => {
+          const key = element.getAttribute('data-translate');
+          if (translations[lang][key]) {
+            element.textContent = translations[lang][key];
+          }
+        });
+
+        // Update active flag
+        document.querySelectorAll('.flag').forEach(flag => {
+          if (flag.getAttribute('data-lang') === lang) {
+            flag.classList.add('active');
+          } else {
+            flag.classList.remove('active');
+          }
+        });
+
+        localStorage.setItem('preferredLanguage', lang);
+      }
+
+      // Initialize language
+      const savedLang = localStorage.getItem('preferredLanguage');
+      const browserLang = getBrowserLanguage();
+      const initialLang = savedLang || browserLang;
+      
+      changeLanguage(initialLang);
+
+      // Add click events to flags
+      document.querySelectorAll('.flag').forEach(flag => {
+        flag.addEventListener('click', function() {
+          const lang = this.getAttribute('data-lang');
+          changeLanguage(lang);
+        });
+      });
+
+      // Intersection Observer for animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // Observe all animated elements
+      document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+        el.style.animationPlayState = 'paused';
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>
