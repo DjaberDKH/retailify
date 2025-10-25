@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Retailify POS - Simplifiez vos commandes avec vos fournisseurs</title>
+  <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/Logo.png">
+  <meta name="description" content="Commandez vos produits FMCG directement depuis votre smartphone avec Retailify. Réapprovisionnez-vous sans vous déplacer.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2e3244',
+            secondary: '#c5c6c6',
+            accent: '#f1895c',
+            white: '#ffffff',
+            iconBg: '#516079'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { box-sizing: border-box; transition: opacity 260ms ease; }
+    .gradient-bg { background: linear-gradient(135deg, #2e3244 0%, #3a3f56 100%); }
+    .fade-in { animation: fadeIn 0.8s ease-in; }
+    .slide-in-left { animation: slideInLeft 0.8s ease-out; }
+    .slide-in-right { animation: slideInRight 0.8s ease-out; }
+    .bounce-in { animation: bounceIn 1s ease-out; }
+    .pulse-gentle { animation: pulseGentle 2s infinite; }
+    
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(30px);} 
+      to { opacity: 1; transform: translateY(0);} 
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.3); }
+      50% { opacity: 1; transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulseGentle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .hover-lift { transition: all 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    .icon-bg { background-color: #516079; }
+    .flag { 
+      cursor: pointer; 
+      width: 28px; 
+      height: 20px; 
+      border-radius: 4px; 
+      margin-left: 8px; 
+      opacity: 0.8; 
+      transition: all 0.2s ease; 
+    }
+    .flag:hover { transform: translateY(-2px); opacity: 1; }
+    .flag.active { box-shadow: 0 0 0 2px rgba(241,137,92,0.3); opacity: 1; }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .mobile-stack { flex-direction: column; }
+      .mobile-center { text-align: center; }
+      .mobile-padding { padding: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body class="bg-white">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/App%20logo.png"
+             alt="Logo Retailify" class="h-10 w-auto mr-3 bounce-in">
+        <span class="text-2xl font-bold text-primary">Retailify</span>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <!-- Navigation Links -->
+        <div class="hidden md:flex space-x-6">
+          <a href="index.html" class="text-primary hover:text-accent font-semibold text-sm transition-all" data-translate="navProducers">Pour les Producteurs</a>
+          <a href="pos.html" class="bg-accent text-white px-4 py-2 rounded-lg font-semibold text-sm transition-all hover:scale-105" data-translate="navMerchants">Pour les Commerçants</a>
+        </div>
+        
+        <!-- Language Selector -->
+        <div class="flex items-center ml-4" id="langSelector">
+          <img src="https://flagcdn.com/w20/fr.png" class="flag" data-lang="fr" alt="FR" title="Français" />
+          <img src="https://flagcdn.com/w20/gb.png" class="flag" data-lang="en" alt="EN" title="English" />
+          <img src="https://flagcdn.com/w20/dz.png" class="flag" data-lang="ar" alt="AR" title="العربية" />
+        </div>
+        
+        <!-- Mobile menu button -->
+        <button class="md:hidden text-primary" id="mobileMenuButton">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="md:hidden hidden bg-white border-t" id="mobileMenu">
+      <div class="px-4 py-2 space-y-2">
+        <a href="index.html" class="block text-primary hover:text-accent font-semibold text-sm" data-translate="navProducers">Pour les Producteurs</a>
+        <a href="pos.html" class="block bg-accent text-white px-4 py-2 rounded-lg font-semibold text-sm" data-translate="navMerchants">Pour les Commerçants</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section Héros -->
+  <section class="gradient-bg text-white py-16 md:py-20 mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div class="fade-in">
+          <h1 class="text-3xl md:text-5xl font-bold mb-6 leading-tight" data-translate="heroTitle">
+            Simplifiez vos commandes avec vos fournisseurs
+          </h1>
+          <p class="text-lg md:text-xl mb-8 text-gray-200" data-translate="heroDesc">
+            Commandez vos produits FMCG directement depuis votre smartphone, sans aucun effort.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeaYbhcDOQR9S8d5N5cQnrgwwKOROemrXRiGxx2RjOElsDYwQ/viewform?usp=header" 
+               target="_blank" 
+               class="bg-accent hover:bg-orange-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold text-base md:text-lg transition-all text-center pulse-gentle">
+              <span data-translate="heroBtn">Rejoindre la liste d'attente</span>
+            </a>
+          </div>
+        </div>
+        <div class="fade-in mt-8 md:mt-0">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/home.png"
+               alt="Interface Retailify POS" class="w-full max-w-md mx-auto rounded-2xl shadow-2xl"/>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Problème -->
+  <section class="py-16 md:py-20 bg-gray-50 mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center fade-in">
+        <h2 class="text-2xl md:text-4xl font-bold text-primary mb-6" data-translate="problemTitle">Vous devez vous déplacer au marché de gros pour vous réapprovisionner ?</h2>
+        <p class="text-xl text-gray-600 mb-12 max-w-4xl mx-auto" data-translate="problemSubtitle">
+          Avec Retailify, commandez vos produits sans bouger.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">🚗</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="p1Title">Déplacements coûteux</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="p1Desc">Perte de temps et d'argent dans les déplacements</p>
+        </div>
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">⏰</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="p2Title">Temps perdu</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="p2Desc">Des heures perdues dans les marchés de gros</p>
+        </div>
+        <div class="text-center fade-in">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">📦</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-3" data-translate="p3Title">Stock imprévisible</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="p3Desc">Difficulté à gérer les stocks et les ruptures</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Solution -->
+  <section class="py-16 md:py-20 bg-white mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center fade-in">
+        <h2 class="text-2xl md:text-4xl font-bold text-primary mb-6" data-translate="solutionTitle">Comment Retailify vous aide</h2>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center mt-8 md:mt-12">
+        <div class="fade-in">
+          <div class="grid gap-6 md:gap-8">
+            <div class="flex items-start">
+              <div class="icon-bg text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-xl font-bold mr-4 flex-shrink-0">📱</div>
+              <div>
+                <h3 class="text-lg md:text-xl font-semibold text-primary mb-2" data-translate="s1Title">Commandez depuis l'application</h3>
+                <p class="text-gray-600 text-sm md:text-base" data-translate="s1Desc">Passez vos commandes en quelques clics depuis votre smartphone</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="icon-bg text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-xl font-bold mr-4 flex-shrink-0">💰</div>
+              <div>
+                <h3 class="text-lg md:text-xl font-semibold text-primary mb-2" data-translate="s2Title">Comparez les prix</h3>
+                <p class="text-gray-600 text-sm md:text-base" data-translate="s2Desc">Accédez aux meilleurs prix et promotions de vos fournisseurs</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="icon-bg text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-xl font-bold mr-4 flex-shrink-0">🚚</div>
+              <div>
+                <h3 class="text-lg md:text-xl font-semibold text-primary mb-2" data-translate="s3Title">Suivez vos livraisons</h3>
+                <p class="text-gray-600 text-sm md:text-base" data-translate="s3Desc">Suivez en temps réel l'état de vos commandes et livraisons</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fade-in mt-8 md:mt-0">
+          <div class="bg-gray-50 p-6 md:p-8 rounded-2xl">
+            <h4 class="text-xl md:text-2xl font-bold text-primary mb-6 text-center" data-translate="flowTitle">Flux de commande simplifié</h4>
+            <div class="space-y-4 md:space-y-6">
+              <div class="flex items-center">
+                <div class="icon-bg text-white w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold mr-3 md:mr-4">🏪</div>
+                <div class="flex-1">
+                  <p class="font-semibold text-primary text-sm md:text-base" data-translate="flow1Title">POS Commande</p>
+                  <p class="text-xs md:text-sm text-gray-600" data-translate="flow1Desc">Vous passez commande depuis l'app</p>
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <div class="text-xl md:text-2xl">↓</div>
+              </div>
+              <div class="flex items-center">
+                <div class="icon-bg text-white w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold mr-3 md:mr-4">🏭</div>
+                <div class="flex-1">
+                  <p class="font-semibold text-primary text-sm md:text-base" data-translate="flow2Title">Distributeur Reçoit</p>
+                  <p class="text-xs md:text-sm text-gray-600" data-translate="flow2Desc">Votre fournisseur prépare la commande</p>
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <div class="text-xl md:text-2xl">↓</div>
+              </div>
+              <div class="flex items-center">
+                <div class="icon-bg text-white w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold mr-3 md:mr-4">📦</div>
+                <div class="flex-1">
+                  <p class="font-semibold text-primary text-sm md:text-base" data-translate="flow3Title">Livraison</p>
+                  <p class="text-xs md:text-sm text-gray-600" data-translate="flow3Desc">Réception directe dans votre commerce</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Fonctionnalités -->
+  <section class="py-16 md:py-20 bg-gray-50 mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 md:mb-16">
+        <h2 class="text-2xl md:text-4xl font-bold text-primary mb-6" data-translate="featuresTitle">Fonctionnalités clés</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg hover-lift text-center">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">📚</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-4" data-translate="f1Title">Catalogue complet</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="f1Desc">Accédez à un catalogue complet de produits FMCG</p>
+        </div>
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg hover-lift text-center">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">🎯</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-4" data-translate="f2Title">Promotions</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="f2Desc">Recevez des notifications des promotions exclusives</p>
+        </div>
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg hover-lift text-center">
+          <div class="icon-bg text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mx-auto mb-4">📊</div>
+          <h3 class="text-lg md:text-xl font-semibold text-primary mb-4" data-translate="f3Title">Historique</h3>
+          <p class="text-gray-600 text-sm md:text-base" data-translate="f3Desc">Consultez l'historique complet de vos commandes</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Screenshots -->
+  <section class="py-16 md:py-20 bg-white mobile-padding">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 md:mb-16">
+        <h2 class="text-2xl md:text-4xl font-bold text-primary mb-6" data-translate="screenshotsTitle">Aperçu de l'app Retailify</h2>
+      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div class="text-center fade-in">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/home.png" 
+               alt="Accueil Retailify" class="w-full rounded-xl shadow-lg mb-3 md:mb-4 hover-lift">
+          <p class="text-gray-600 font-semibold text-sm md:text-base" data-translate="screen1">Page d'accueil</p>
+        </div>
+        <div class="text-center fade-in">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/listing.png" 
+               alt="Catalogue produits" class="w-full rounded-xl shadow-lg mb-3 md:mb-4 hover-lift">
+          <p class="text-gray-600 font-semibold text-sm md:text-base" data-translate="screen2">Catalogue produits</p>
+        </div>
+        <div class="text-center fade-in">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/offers.png" 
+               alt="Offres spéciales" class="w-full rounded-xl shadow-lg mb-3 md:mb-4 hover-lift">
+          <p class="text-gray-600 font-semibold text-sm md:text-base" data-translate="screen3">Offres et promotions</p>
+        </div>
+        <div class="text-center fade-in">
+          <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/orders.png" 
+               alt="Suivi commandes" class="w-full rounded-xl shadow-lg mb-3 md:mb-4 hover-lift">
+          <p class="text-gray-600 font-semibold text-sm md:text-base" data-translate="screen4">Suivi des commandes</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section CTA Final -->
+  <section class="bg-primary py-16 md:py-20 mobile-padding">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-4xl font-bold text-white mb-6" data-translate="ctaTitle">Rejoignez dès maintenant la liste d'attente</h2>
+      <p class="text-lg md:text-xl text-gray-200 mb-8" data-translate="ctaDesc">
+        Recevez un accès anticipé à Retailify et transformez votre façon de commander !
+      </p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeaYbhcDOQR9S8d5N5cQnrgwwKOROemrXRiGxx2RjOElsDYwQ/viewform?usp=header" 
+         target="_blank" 
+         class="bg-accent hover:bg-orange-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-lg font-semibold text-lg md:text-xl transition-all inline-block pulse-gentle">
+        <span data-translate="ctaBtn">Rejoindre la liste d'attente</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white py-12 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="flex items-center justify-center mb-4">
+        <img src="https://raw.githubusercontent.com/DjaberDKH/retailify/refs/heads/main/Screenshots/App%20logo.png" 
+             alt="Logo Retailify" class="h-8 w-auto mr-3">
+        <span class="text-xl font-bold text-primary">Retailify</span>
+      </div>
+      <div class="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-6 mb-4">
+        <a href="index.html" class="text-primary hover:text-accent font-semibold" data-translate="navProducers">Pour les Producteurs</a>
+        <a href="pos.html" class="text-primary hover:text-accent font-semibold" data-translate="navMerchants">Pour les Commerçants</a>
+      </div>
+      <p class="text-gray-600" data-translate="footerText">© 2024 Retailify. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      fr: {
+        navProducers: "Pour les Producteurs",
+        navMerchants: "Pour les Commerçants",
+        heroTitle: "Simplifiez vos commandes avec vos fournisseurs",
+        heroDesc: "Commandez vos produits FMCG directement depuis votre smartphone, sans aucun effort.",
+        heroBtn: "Rejoindre la liste d'attente",
+        problemTitle: "Vous devez vous déplacer au marché de gros pour vous réapprovisionner ?",
+        problemSubtitle: "Avec Retailify, commandez vos produits sans bouger.",
+        p1Title: "Déplacements coûteux",
+        p1Desc: "Perte de temps et d'argent dans les déplacements",
+        p2Title: "Temps perdu",
+        p2Desc: "Des heures perdues dans les marchés de gros",
+        p3Title: "Stock imprévisible",
+        p3Desc: "Difficulté à gérer les stocks et les ruptures",
+        solutionTitle: "Comment Retailify vous aide",
+        s1Title: "Commandez depuis l'application",
+        s1Desc: "Passez vos commandes en quelques clics depuis votre smartphone",
+        s2Title: "Comparez les prix",
+        s2Desc: "Accédez aux meilleurs prix et promotions de vos fournisseurs",
+        s3Title: "Suivez vos livraisons",
+        s3Desc: "Suivez en temps réel l'état de vos commandes et livraisons",
+        flowTitle: "Flux de commande simplifié",
+        flow1Title: "POS Commande",
+        flow1Desc: "Vous passez commande depuis l'app",
+        flow2Title: "Distributeur Reçoit",
+        flow2Desc: "Votre fournisseur prépare la commande",
+        flow3Title: "Livraison",
+        flow3Desc: "Réception directe dans votre commerce",
+        featuresTitle: "Fonctionnalités clés",
+        f1Title: "Catalogue complet",
+        f1Desc: "Accédez à un catalogue complet de produits FMCG",
+        f2Title: "Promotions",
+        f2Desc: "Recevez des notifications des promotions exclusives",
+        f3Title: "Historique",
+        f3Desc: "Consultez l'historique complet de vos commandes",
+        screenshotsTitle: "Aperçu de l'app Retailify",
+        screen1: "Page d'accueil",
+        screen2: "Catalogue produits",
+        screen3: "Offres et promotions",
+        screen4: "Suivi des commandes",
+        ctaTitle: "Rejoignez dès maintenant la liste d'attente",
+        ctaDesc: "Recevez un accès anticipé à Retailify et transformez votre façon de commander !",
+        ctaBtn: "Rejoindre la liste d'attente",
+        footerText: "© 2024 Retailify. Tous droits réservés."
+      },
+      en: {
+        navProducers: "For Producers",
+        navMerchants: "For Merchants",
+        heroTitle: "Simplify your orders with your suppliers",
+        heroDesc: "Order your FMCG products directly from your smartphone, without any effort.",
+        heroBtn: "Join Waitlist",
+        problemTitle: "Do you have to go to the wholesale market to restock?",
+        problemSubtitle: "With Retailify, order your products without moving.",
+        p1Title: "Costly Travel",
+        p1Desc: "Loss of time and money in travel",
+        p2Title: "Wasted Time",
+        p2Desc: "Hours lost in wholesale markets",
+        p3Title: "Unpredictable Stock",
+        p3Desc: "Difficulty managing stock and shortages",
+        solutionTitle: "How Retailify Helps You",
+        s1Title: "Order from the App",
+        s1Desc: "Place your orders in a few clicks from your smartphone",
+        s2Title: "Compare Prices",
+        s2Desc: "Access the best prices and promotions from your suppliers",
+        s3Title: "Track Your Deliveries",
+        s3Desc: "Track the status of your orders and deliveries in real time",
+        flowTitle: "Simplified Order Flow",
+        flow1Title: "POS Orders",
+        flow1Desc: "You place order from the app",
+        flow2Title: "Distributor Receives",
+        flow2Desc: "Your supplier prepares the order",
+        flow3Title: "Delivery",
+        flow3Desc: "Direct reception in your store",
+        featuresTitle: "Key Features",
+        f1Title: "Complete Catalog",
+        f1Desc: "Access a complete catalog of FMCG products",
+        f2Title: "Promotions",
+        f2Desc: "Receive notifications of exclusive promotions",
+        f3Title: "History",
+        f3Desc: "Consult the complete history of your orders",
+        screenshotsTitle: "Retailify App Preview",
+        screen1: "Home Page",
+        screen2: "Product Catalog",
+        screen3: "Offers & Promotions",
+        screen4: "Order Tracking",
+        ctaTitle: "Join the waitlist now",
+        ctaDesc: "Get early access to Retailify and transform your ordering method!",
+        ctaBtn: "Join Waitlist",
+        footerText: "© 2024 Retailify. All rights reserved."
+      },
+      ar: {
+        navProducers: "للمنتجين",
+        navMerchants: "للتجار",
+        heroTitle: "بسّط طلباتك مع مورديك",
+        heroDesc: "اطلب منتجاتك الاستهلاكية مباشرة من هاتفك الذكي، بدون أي جهد.",
+        heroBtn: "انضم لقائمة الانتظار",
+        problemTitle: "هل يجب أن تذهب إلى سوق الجملة لإعادة التخزين؟",
+        problemSubtitle: "مع Retailify، اطلب منتجاتك دون أن تتحرك.",
+        p1Title: "سفر مكلف",
+        p1Desc: "فقدان الوقت والمال في السفر",
+        p2Title: "وقت ضائع",
+        p2Desc: "ساعات ضائعة في أسواق الجملة",
+        p3Title: "مخزون غير متوقع",
+        p3Desc: "صعوبة في إدارة المخزون والنقص",
+        solutionTitle: "كيف تساعدك Retailify",
+        s1Title: "اطلب من التطبيق",
+        s1Desc: "ضع طلباتك في بضع نقرات من هاتفك الذكي",
+        s2Title: "قارن الأسعار",
+        s2Desc: "الوصول إلى أفضل الأسعار والعروض من مورديك",
+        s3Title: "تتبع توصيلاتك",
+        s3Desc: "تتبع حالة طلباتك وتوصيلاتك في الوقت الحقيقي",
+        flowTitle: "تدفق طلبات مبسط",
+        flow1Title: "نقطة البيع تطلب",
+        flow1Desc: "أنت تضع الطلب من التطبيق",
+        flow2Title: "الموزع يستلم",
+        flow2Desc: "موردك يحضر الطلب",
+        flow3Title: "التوصيل",
+        flow3Desc: "استلام مباشر في متجرك",
+        featuresTitle: "الميزات الرئيسية",
+        f1Title: "كتالوج كامل",
+        f1Desc: "الوصول إلى كتالوج كامل للمنتجات الاستهلاكية",
+        f2Title: "العروض الترويجية",
+        f2Desc: "تلقي إشعارات بالعروض الترويجية الحصرية",
+        f3Title: "السجل",
+        f3Desc: "استشارة السجل الكامل لطلباتك",
+        screenshotsTitle: "معاينة تطبيق Retailify",
+        screen1: "الصفحة الرئيسية",
+        screen2: "كتالوج المنتجات",
+        screen3: "العروض والتخفيضات",
+        screen4: "تتبع الطلبات",
+        ctaTitle: "انضم إلى قائمة الانتظار الآن",
+        ctaDesc: "احصل على وصول مبكر إلى Retailify وغير طريقة طلبك!",
+        ctaBtn: "انضم لقائمة الانتظار",
+        footerText: "© 2024 Retailify. جميع الحقوق محفوظة."
+      }
+    };
+
+    // Mobile menu functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+
+      // Language detection and initialization
+      function getBrowserLanguage() {
+        const browserLang = navigator.language || navigator.userLanguage;
+        const langCode = browserLang.split('-')[0];
+        if (translations[langCode]) {
+          return langCode;
+        }
+        return 'fr';
+      }
+
+      function changeLanguage(lang) {
+        document.documentElement.lang = lang;
+        document.title = lang === 'fr' 
+          ? 'Retailify POS - Simplifiez vos commandes avec vos fournisseurs'
+          : lang === 'en'
+          ? 'Retailify POS - Simplify your orders with your suppliers'
+          : 'Retailify POS - بسّط طلباتك مع مورديك';
+
+        // Update all translatable elements
+        document.querySelectorAll('[data-translate]').forEach(element => {
+          const key = element.getAttribute('data-translate');
+          if (translations[lang][key]) {
+            element.textContent = translations[lang][key];
+          }
+        });
+
+        // Update active flag
+        document.querySelectorAll('.flag').forEach(flag => {
+          if (flag.getAttribute('data-lang') === lang) {
+            flag.classList.add('active');
+          } else {
+            flag.classList.remove('active');
+          }
+        });
+
+        localStorage.setItem('preferredLanguage', lang);
+      }
+
+      // Initialize language
+      const savedLang = localStorage.getItem('preferredLanguage');
+      const browserLang = getBrowserLanguage();
+      const initialLang = savedLang || browserLang;
+      
+      changeLanguage(initialLang);
+
+      // Add click events to flags
+      document.querySelectorAll('.flag').forEach(flag => {
+        flag.addEventListener('click', function() {
+          const lang = this.getAttribute('data-lang');
+          changeLanguage(lang);
+        });
+      });
+
+      // Intersection Observer for animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // Observe all animated elements
+      document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+        el.style.animationPlayState = 'paused';
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>
